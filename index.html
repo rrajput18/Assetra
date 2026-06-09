@@ -215,7 +215,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                 <label for="setup-upi-id">UPI ID (For Scan Payments)</label>
                 <input type="text" id="setup-upi-id" class="form-input" placeholder="e.g. emeraldsociety@upi" required />
               </div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Create Building Registry & Code</button>
+              <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Pay Setup Fee & Create Registry (₹999)</button>
               <div style="text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--text-secondary);">
                 Already have a registry? <a href="#" id="btn-goto-admin-login" style="color: var(--primary); font-weight: 700; text-decoration: none;">Log in here</a>
               </div>
@@ -735,6 +735,11 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                   <div class="form-group">
                     <label for="settings-upi-id">UPI ID</label>
                     <input type="text" id="settings-upi-id" class="form-input" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="settings-razorpay-key">Razorpay Key ID (For receiving payments directly)</label>
+                    <input type="text" id="settings-razorpay-key" class="form-input" placeholder="e.g. rzp_test_xxxxxx" />
+                    <p style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;">Leave empty to fallback to mock simulation mode.</p>
                   </div>
                   <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Save Registry Changes</button>
                 </form>

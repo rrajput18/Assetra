@@ -6,6 +6,7 @@
 -- 1. Add SaaS columns to the buildings table
 ALTER TABLE buildings ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
 ALTER TABLE buildings ADD COLUMN IF NOT EXISTS subscription_expires_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '1 year');
+ALTER TABLE buildings ADD COLUMN IF NOT EXISTS razorpay_key_id TEXT;
 
 -- 2. Update existing buildings to have a default subscription expiry of 1 year from now
 UPDATE buildings 

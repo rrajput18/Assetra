@@ -290,7 +290,8 @@ function setupPortalRouting() {
       bankName: document.getElementById('setup-bank-name').value,
       accountNo: document.getElementById('setup-account-no').value,
       ifsc: document.getElementById('setup-ifsc').value,
-      upiId: document.getElementById('setup-upi-id').value
+      upiId: document.getElementById('setup-upi-id').value,
+      razorpayKeyId: '' // Will be set by admin later in settings
     };
 
     try {
@@ -308,16 +309,60 @@ function setupPortalRouting() {
         return;
       }
 
-      const newBuilding = await registerBuilding(name, bankDetails, baseMaintenance, adminDetails);
-      if (newBuilding) {
-        session.role = 'admin';
-        session.buildingCode = newBuilding.code;
-        
-        showToast(`Registered "${name}" and logged in!`, 'success');
-        document.getElementById('form-register-building-landing').reset();
-        enterWorkspace();
+      const executeRegistration = async () => {
+        const newBuilding = await registerBuilding(name, bankDetails, baseMaintenance, adminDetails);
+        if (newBuilding) {
+          session.role = 'admin';
+          session.buildingCode = newBuilding.code;
+          session.flatNo = null;
+          
+          showToast(`Registered "${name}" and logged in!`, 'success');
+          document.getElementById('form-register-building-landing').reset();
+          enterWorkspace();
+        } else {
+          showToast('Registration failed.', 'error');
+        }
+      };
+
+      const rzpKey = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
+      const isRealGatewayConfigured = rzpKey && rzpKey !== 'YOUR_RAZORPAY_KEY_ID_HERE';
+
+      if (isRealGatewayConfigured) {
+        const options = {
+          key: rzpKey,
+          amount: 99900, // ₹999 in paise
+          currency: 'INR',
+          name: 'Assetra Platforms',
+          description: `Registry Setup Fee - ${name}`,
+          image: '/favicon.svg',
+          handler: async function (response) {
+            showToast('Setup payment received! Registering building...', 'info');
+            await executeRegistration();
+          },
+          prefill: {
+            name: adminDetails.name,
+            email: adminDetails.username
+          },
+          theme: {
+            color: '#d4af37'
+          }
+        };
+
+        try {
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        } catch (err) {
+          console.error('Razorpay registration fee load failed:', err);
+          showToast('Failed to initialize Razorpay SDK. Verify Key ID.', 'error');
+        }
       } else {
-        showToast('Registration failed.', 'error');
+        // Mock simulation mode
+        if (confirm(`[Simulation Mode] Pay ₹999 Registration Setup Fee for "${name}"?`)) {
+          showToast('Processing simulated registration payment...', 'info');
+          setTimeout(async () => {
+            await executeRegistration();
+          }, 1500);
+        }
       }
     } catch (error) {
       console.error('Registration error details:', error);
@@ -1075,6 +1120,7 @@ function populateAdminSettingsForm(building) {
   document.getElementById('settings-account-no').value = building.bankDetails.accountNo || '';
   document.getElementById('settings-ifsc').value = building.bankDetails.ifsc || '';
   document.getElementById('settings-upi-id').value = building.bankDetails.upiId || '';
+  document.getElementById('settings-razorpay-key').value = building.bankDetails.razorpayKeyId || '';
 
   // Admin details
   document.getElementById('settings-admin-name').value = building.adminDetails ? building.adminDetails.name : '';
@@ -1096,7 +1142,8 @@ function populateAdminSettingsForm(building) {
         bankName: document.getElementById('settings-bank-name').value,
         accountNo: document.getElementById('settings-account-no').value,
         ifsc: document.getElementById('settings-ifsc').value,
-        upiId: document.getElementById('settings-upi-id').value
+        upiId: document.getElementById('settings-upi-id').value,
+        razorpayKeyId: document.getElementById('settings-razorpay-key').value.trim()
       };
 
       // Check if administrative username is taken by another building
@@ -1463,7 +1510,8 @@ function openCheckoutGateway(building, flat) {
       }
     }
 
-    const rzpKey = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
+    const buildingKey = building.bankDetails.razorpayKeyId || '';
+    const rzpKey = buildingKey || import.meta.env.VITE_RAZORPAY_KEY_ID || '';
     const isRealGatewayConfigured = rzpKey && rzpKey !== 'YOUR_RAZORPAY_KEY_ID_HERE';
 
     if (isRealGatewayConfigured) {
