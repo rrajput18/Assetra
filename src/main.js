@@ -310,17 +310,22 @@ function setupPortalRouting() {
       }
 
       const executeRegistration = async () => {
-        const newBuilding = await registerBuilding(name, bankDetails, baseMaintenance, adminDetails);
-        if (newBuilding) {
-          session.role = 'admin';
-          session.buildingCode = newBuilding.code;
-          session.flatNo = null;
-          
-          showToast(`Registered "${name}" and logged in!`, 'success');
-          document.getElementById('form-register-building-landing').reset();
-          enterWorkspace();
-        } else {
-          showToast('Registration failed.', 'error');
+        try {
+          const newBuilding = await registerBuilding(name, bankDetails, baseMaintenance, adminDetails);
+          if (newBuilding) {
+            session.role = 'admin';
+            session.buildingCode = newBuilding.code;
+            session.flatNo = null;
+            
+            showToast(`Registered "${name}" and logged in!`, 'success');
+            document.getElementById('form-register-building-landing').reset();
+            enterWorkspace();
+          } else {
+            showToast('Registration failed.', 'error');
+          }
+        } catch (err) {
+          console.error('Registration database error:', err);
+          showToast(`Registration failed: ${err.message || err}`, 'error');
         }
       };
 
