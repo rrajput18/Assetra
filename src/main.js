@@ -291,7 +291,7 @@ function setupPortalRouting() {
       accountNo: document.getElementById('setup-account-no').value,
       ifsc: document.getElementById('setup-ifsc').value,
       upiId: document.getElementById('setup-upi-id').value,
-      razorpayKeyId: '' // Will be set by admin later in settings
+      razorpayKeyId: document.getElementById('setup-razorpay-key').value.trim()
     };
 
     try {
@@ -1368,12 +1368,12 @@ function renderMemberDashboard(building) {
   if (flat.outstandingDues > 0) {
     statusBadge.className = 'badge badge-danger';
     statusBadge.textContent = 'Outstanding';
-    payBtn.classList.remove('hidden');
   } else {
     statusBadge.className = 'badge badge-success';
     statusBadge.textContent = 'Paid Up';
-    payBtn.classList.add('hidden');
   }
+  // Keep the Pay button always visible so residents can pay custom amounts or prepay
+  payBtn.classList.remove('hidden');
 
   // Display bank details
   document.getElementById('member-bank-name').textContent = building.bankDetails.bankName || '-';
@@ -1471,8 +1471,8 @@ function openCheckoutGateway(building, flat) {
 
   // Set up custom amount input
   const payAmountInput = document.getElementById('checkout-pay-amount');
-  payAmountInput.value = flat.outstandingDues;
-  payAmountInput.max = flat.outstandingDues;
+  payAmountInput.value = flat.outstandingDues || 0;
+  payAmountInput.removeAttribute('max');
 
   document.getElementById('pay-card-number').value = '';
   document.getElementById('pay-card-expiry').value = '';
@@ -1498,8 +1498,8 @@ function openCheckoutGateway(building, flat) {
   const btnProcess = document.getElementById('btn-process-checkout');
   btnProcess.onclick = () => {
     const payAmountVal = Number(payAmountInput.value) || 0;
-    if (payAmountVal <= 0 || payAmountVal > flat.outstandingDues) {
-      showToast(`Please enter a valid amount between ₹1 and ₹${flat.outstandingDues.toLocaleString()}`, 'error');
+    if (payAmountVal <= 0) {
+      showToast('Please enter a valid amount greater than ₹0', 'error');
       return;
     }
 
