@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link class="favicon" rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Inline Theme Loader to prevent UI flash/reload animation -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('assetra_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <title>Assetra - Premium Building Maintenance Tracker & Defaulter Leaderboard</title>
+    <meta name="description" content="Assetra is a high-traffic building maintenance tracking application. Features include a public defaulters leaderboard, admin property portals, bank details configuration, and email reminder alerts." />
+    <!-- Razorpay Standard Checkout SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body>
+    <!-- PAGE PRELOADER OVERLAY -->
+    <div id="app-preloader" class="preloader-overlay">
+      <div class="preloader-content">
+        <!-- Animated Building Illustration "building up" -->
+        <div class="preloader-building-wrapper">
+          <svg viewBox="0 0 100 100" class="preloader-building-svg">
+            <!-- Building Base/Ground Line -->
+            <line x1="10" y1="90" x2="90" y2="90" class="draw-line ground-line" />
+            
+            <!-- Left Skyscraper Building -->
+            <rect x="26" y="35" width="20" height="55" rx="3" class="draw-building building-left" fill="none" style="transform: scaleY(0); transform-origin: bottom;" />
+            <!-- Left Building Windows -->
+            <line x1="31" y1="45" x2="41" y2="45" class="draw-window win-l-1" style="opacity: 0;" />
+            <line x1="31" y1="55" x2="41" y2="55" class="draw-window win-l-2" style="opacity: 0;" />
+            <line x1="31" y1="65" x2="41" y2="65" class="draw-window win-l-3" style="opacity: 0;" />
+            <line x1="31" y1="75" x2="41" y2="75" class="draw-window win-l-4" style="opacity: 0;" />
+            
+            <!-- Right Skyscraper Building (Taller) -->
+            <rect x="54" y="18" width="20" height="72" rx="3" class="draw-building building-right" fill="none" style="transform: scaleY(0); transform-origin: bottom;" />
+            <!-- Right Building Windows -->
+            <line x1="59" y1="28" x2="69" y2="28" class="draw-window win-r-1" style="opacity: 0;" />
+            <line x1="59" y1="38" x2="69" y2="38" class="draw-window win-r-2" style="opacity: 0;" />
+            <line x1="59" y1="48" x2="69" y2="48" class="draw-window win-r-3" style="opacity: 0;" />
+            <line x1="59" y1="58" x2="69" y2="58" class="draw-window win-r-4" style="opacity: 0;" />
+            <line x1="59" y1="68" x2="69" y2="68" class="draw-window win-r-5" style="opacity: 0;" />
+            <line x1="59" y1="78" x2="69" y2="78" class="draw-window win-r-6" style="opacity: 0;" />
+            
+            <!-- Decorative Top Spire -->
+            <line x1="64" y1="6" x2="64" y2="18" class="draw-line spire-line" style="opacity: 0;" />
+          </svg>
+        </div>
+        <h2 class="preloader-title">Assetra</h2>
+        <p class="preloader-subtitle">Constructing Workspace...</p>
+      </div>
+    </div>
+
+    <div id="app">
+      <!-- SUPABASE SETUP SCREEN -->
+      <section id="view-supabase-setup" class="landing-view hidden" style="padding: 20px 40px;">
+        <div class="login-card" style="width: 100%; max-width: 540px; text-align: center;">
+          <div class="logo-icon" style="margin: 0 auto; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--accent-gradient); color: #fff; border-radius: 12px; box-shadow: 0 6px 20px var(--primary-glow);">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" style="stroke-linecap: round; stroke-linejoin: round;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h2 style="font-size: 24px; color: var(--primary); font-weight: 800; margin-top: 16px;">Supabase Integration Required</h2>
+          <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px; line-height: 1.5;">
+            To run Assetra, you need to connect your remote Supabase database. Please follow these simple instructions:
+          </p>
+          <div style="text-align: left; font-size: 13.5px; color: var(--text-primary); margin: 16px 0; background: var(--bg-primary); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px;">
+            <div><b>1. Execute SQL Schema:</b> Open the **SQL Editor** in your Supabase dashboard, create a blank query, copy/paste the SQL code from <code>implementation_plan.md</code>, and click **Run**.</div>
+            <div><b>2. Add Credentials:</b> Open the <code>.env</code> file in your project folder and add your Project URL and Anon API key:
+              <pre style="margin-top: 8px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; font-family: monospace; font-size: 11.5px; overflow-x: auto; color: var(--text-primary);">VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
+            </div>
+            <div><b>3. Restart Dev Server:</b> Stop the running dev server in your terminal (press <code>Ctrl+C</code>) and run <code>npm run dev</code> again to apply configuration changes.</div>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 12.5px; line-height: 1.4;">
+            Once you restart the server, the app will automatically connect and seed the default demo property!
+          </p>
+        </div>
+      </section>
+
+      <!-- LANDING VIEW (Centered, Minimal start screen without leaderboard) -->
+      <section id="view-landing" class="landing-view">
+        <header class="landing-header">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" style="stroke-linecap: round; stroke-linejoin: round;">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <h1 id="app-title-landing" class="logo-text">Assetra</h1>
+        </header>
+
+        <!-- Right Column: Portal Choice or Login Forms -->
+        <div id="landing-right-column" class="landing-portals-container">
+          
+          <!-- Portal Selection Screen -->
+          <div id="portal-selector" style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="text-align: center; margin-bottom: 12px;">
+              <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 6px; color: var(--text-primary);">Estate Maintenance Hub</h2>
+              <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                Select your designated portal to manage building registries or settle outstanding maintenance charges.
+              </p>
+            </div>
+
+            <div class="portal-card" id="btn-select-admin">
+              <div class="portal-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div class="portal-details">
+                <h3 class="portal-title">Property Administrator</h3>
+                <p class="portal-desc">Register buildings, add flat details, configure bank accounts, set dues, and send email reminders.</p>
+              </div>
+            </div>
+
+            <div class="portal-card" id="btn-select-member">
+              <div class="portal-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+              </div>
+              <div class="portal-details">
+                <h3 class="portal-title">Building Member Login</h3>
+                <p class="portal-desc">Log in with your building code and flat number to view your maintenance invoice and pay dues online.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Credentials Login -->
+          <div id="login-admin" class="login-card hidden">
+            <div class="login-back-btn" id="btn-back-admin-login">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg> Back to Selector
+            </div>
+            <div class="login-title">
+              <h3>Admin Authentication</h3>
+              <p>Log in with your administrator credentials to manage your property database.</p>
+            </div>
+            <form id="form-admin-login">
+              <div class="form-group">
+                <label for="admin-login-username">Admin Username / Email</label>
+                <input type="text" id="admin-login-username" class="form-input" placeholder="Enter Username" required />
+              </div>
+              <div class="form-group">
+                <label for="admin-login-password">Password</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input type="password" id="admin-login-password" class="form-input" placeholder="Enter Password" required style="padding-right: 40px;" />
+                  <button type="button" id="btn-toggle-admin-login-password" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; padding: 4px;" title="Show/Hide Password">
+                    <svg id="eye-icon-admin" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events: none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 12px;">Authorize Access</button>
+              <div style="text-align: center; font-size: 13.5px; color: var(--text-secondary);">
+                Want to manage a new building? <a href="#" id="btn-goto-admin-register" style="color: var(--primary); font-weight: 700; text-decoration: none;">Register Property & Admin</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- Register New Building & Admin Account -->
+          <div id="register-admin-building" class="login-card hidden" style="max-width: 500px;">
+            <div class="login-back-btn" id="btn-back-admin-register">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg> Back to Selector
+            </div>
+            <div class="login-title">
+              <h3>Register Building & Admin</h3>
+              <p>Create a new property database and exclusive head administrator account.</p>
+            </div>
+            <form id="form-register-building-landing">
+              <h4 style="font-size: 14px; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Building details</h4>
+              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="setup-building-name">Building / Society Name</label>
+                  <input type="text" id="setup-building-name" class="form-input" placeholder="e.g. Skyline Apartments" required />
+                </div>
+                <div class="form-group">
+                  <label for="setup-base-maintenance">Base Maintenance Charge (₹)</label>
+                  <input type="number" id="setup-base-maintenance" class="form-input" min="0" placeholder="e.g. 4000" required />
+                </div>
+              </div>
+
+              <h4 style="font-size: 14px; color: var(--primary); margin: 16px 0 10px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Admin Details (Head of Building)</h4>
+              <div class="form-group">
+                <label for="setup-admin-name">Admin Name</label>
+                <input type="text" id="setup-admin-name" class="form-input" placeholder="e.g. Vikram Malhotra" required />
+              </div>
+              <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="setup-admin-username">Username / Email</label>
+                  <input type="text" id="setup-admin-username" class="form-input" placeholder="e.g. skyline_admin" required />
+                </div>
+                <div class="form-group">
+                  <label for="setup-admin-password">Password</label>
+                  <input type="password" id="setup-admin-password" class="form-input" placeholder="Choose a password" required />
+                </div>
+              </div>
+
+              <h4 style="font-size: 14px; color: var(--primary); margin: 16px 0 10px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Association Deposit Accounts</h4>
+              <div class="form-group">
+                <label for="setup-bank-name">Bank Name</label>
+                <input type="text" id="setup-bank-name" class="form-input" placeholder="e.g. HDFC Bank" required />
+              </div>
+              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="setup-account-no">Account Number</label>
+                  <input type="text" id="setup-account-no" class="form-input" placeholder="e.g. 5010024987654" required />
+                </div>
+                <div class="form-group">
+                  <label for="setup-ifsc">IFSC Code</label>
+                  <input type="text" id="setup-ifsc" class="form-input" placeholder="e.g. HDFC0000123" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="setup-upi-id">UPI ID (For Scan Payments)</label>
+                <input type="text" id="setup-upi-id" class="form-input" placeholder="e.g. emeraldsociety@upi" required />
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Create Building Registry & Code</button>
+              <div style="text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--text-secondary);">
+                Already have a registry? <a href="#" id="btn-goto-admin-login" style="color: var(--primary); font-weight: 700; text-decoration: none;">Log in here</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- Member Login Form -->
+          <div id="login-member" class="login-card hidden">
+            <div class="login-back-btn" id="btn-back-member-login">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg> Back to Selector
+            </div>
+            <div class="login-title">
+              <h3>Member Portal Login</h3>
+              <p>Enter your resident username and password to access your dashboard.</p>
+            </div>
+            <form id="form-member-login">
+              <div class="form-group">
+                <label for="member-login-username">Portal Username</label>
+                <input type="text" id="member-login-username" class="form-input" placeholder="Enter Username" required />
+              </div>
+              <div class="form-group">
+                <label for="member-login-password">Password</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input type="password" id="member-login-password" class="form-input" placeholder="Enter Password" required style="padding-right: 40px;" />
+                  <button type="button" id="btn-toggle-member-login-password" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; padding: 4px;" title="Show/Hide Password">
+                    <svg id="eye-icon-member" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events: none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 12px;">Access Dues Panel</button>
+              <div style="text-align: center; font-size: 13.5px; color: var(--text-secondary);">
+                Don't have a portal account? <a href="#" id="btn-goto-member-register" style="color: var(--primary); font-weight: 700; text-decoration: none;">Register Your Flat</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- Member Registration Form -->
+          <div id="register-member-flat" class="login-card hidden" style="max-width: 500px;">
+            <div class="login-back-btn" id="btn-back-member-register">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg> Back to Login
+            </div>
+            <div class="login-title">
+              <h3>Register Flat Account</h3>
+              <p>Create a resident login account for your flat in the building database.</p>
+            </div>
+            <form id="form-member-flat-register">
+              <h4 style="font-size: 14px; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Building & Flat</h4>
+              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="member-reg-building-code">Building Registration Code</label>
+                  <input type="text" id="member-reg-building-code" class="form-input" placeholder="e.g. AST-1001" required />
+                </div>
+                <div class="form-group">
+                  <label for="member-reg-flat-no">Flat Number</label>
+                  <input type="text" id="member-reg-flat-no" class="form-input" placeholder="e.g. A-101" required />
+                </div>
+              </div>
+
+              <h4 style="font-size: 14px; color: var(--primary); margin: 16px 0 10px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Resident Info</h4>
+              <div class="form-group">
+                <label for="member-reg-head-name">Head of Flat Name</label>
+                <input type="text" id="member-reg-head-name" class="form-input" placeholder="e.g. Rajesh Kumar" required />
+              </div>
+              <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="member-reg-phone">Contact Phone</label>
+                  <input type="text" id="member-reg-phone" class="form-input" placeholder="e.g. +91 98100 11111" />
+                </div>
+                <div class="form-group">
+                  <label for="member-reg-email">Contact Email</label>
+                  <input type="email" id="member-reg-email" class="form-input" placeholder="e.g. rajesh@gmail.com" />
+                </div>
+              </div>
+
+              <h4 style="font-size: 14px; color: var(--primary); margin: 16px 0 10px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Portal Credentials</h4>
+              <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="member-reg-username">Portal Username</label>
+                  <input type="text" id="member-reg-username" class="form-input" placeholder="e.g. rajesh_k" required />
+                </div>
+                <div class="form-group">
+                  <label for="member-reg-password">Password</label>
+                  <input type="password" id="member-reg-password" class="form-input" placeholder="Choose a password" required />
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 14px;">Register & Enter Dues Panel</button>
+              <div style="text-align: center; margin-top: 12px; font-size: 13.5px; color: var(--text-secondary);">
+                Already have an account? <a href="#" id="btn-goto-member-login" style="color: var(--primary); font-weight: 700; text-decoration: none;">Log in here</a>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- DASHBOARD / PORTAL WORKSPACE (Top navigation-based layout) -->
+      <div id="app-workspace" class="hidden" style="display: flex; flex-direction: column; min-height: 100vh;">
+        
+        <!-- Top Navigation Header -->
+        <header class="top-navbar">
+          <div class="navbar-brand">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" style="stroke-linecap: round; stroke-linejoin: round;">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <span class="logo-text">Assetra</span>
+          </div>
+
+          <nav>
+            <!-- ADMIN LINKS -->
+            <ul id="navbar-admin-links" class="navbar-links">
+              <li>
+                <a class="navbar-item active" id="nav-item-dashboard" data-panel="admin-dashboard">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a class="navbar-item" id="nav-item-directory" data-panel="admin-directory">
+                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                  Directory
+                </a>
+              </li>
+              <li>
+                <a class="navbar-item" id="nav-item-leaderboard" data-panel="admin-leaderboard">
+                  <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34" /><path d="M12 2a4 4 0 0 1 4 4v7H8V6a4 4 0 0 1 4-4z" /></svg>
+                  Leaderboard
+                </a>
+              </li>
+              <li>
+                <a class="navbar-item" id="nav-item-reminders" data-panel="admin-reminders">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                  Reminders
+                </a>
+              </li>
+              <li>
+                <a class="navbar-item" id="nav-item-settings" data-panel="admin-settings">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+                  Bank Settings
+                </a>
+              </li>
+            </ul>
+
+            <!-- MEMBER LINKS -->
+            <ul id="navbar-member-links" class="navbar-links hidden">
+              <li>
+                <a class="navbar-item active" data-panel="member-dashboard">
+                  <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                  My Dues Panel
+                </a>
+              </li>
+              <li>
+                <a class="navbar-item" data-panel="member-leaderboard">
+                  <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34" /><path d="M12 2a4 4 0 0 1 4 4v7H8V6a4 4 0 0 1 4-4z" /></svg>
+                  Building Leaderboard
+                </a>
+              </li>
+              <li>
+                <a class="navbar-item" data-panel="member-inbox">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                  Reminders Inbox
+                  <span id="member-inbox-badge" class="badge badge-danger" style="margin-left: 6px; padding: 2px 6px; font-size: 10px; display: none;">0</span>
+                </a>
+              </li>
+            </ul>
+
+            <!-- SUPER ADMIN LINKS -->
+            <ul id="navbar-superadmin-links" class="navbar-links hidden">
+              <li>
+                <a class="navbar-item active" data-panel="super-admin-dashboard">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+                  Super Admin Panel
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <div class="navbar-controls">
+            <button id="btn-logout" class="btn btn-secondary navbar-logout-btn">
+              Log Out
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Viewport Section -->
+        <main id="main-viewport" class="main-viewport">
+          
+          <!-- ==================== ADMIN PANELS ==================== -->
+                   <!-- (Properties Hub and Register Building sections removed; now accessed from Landing Page) -->
+
+          <!-- ADMIN 2: Dashboard -->
+          <section id="panel-admin-dashboard" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2 id="admin-dashboard-building-name">Building Dashboard</h2>
+                <p>Real-time property collections and member dues status.</p>
+              </div>
+            </header>
+
+            <!-- Dynamic Property Visual Illustration Container -->
+            <div id="admin-building-status-visual" class="dynamic-building-status-card">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Building code banner -->
+            <div class="panel-card" style="display: flex; align-items: center; justify-content: space-between; border-style: dashed; border-color: var(--primary); background: rgba(184, 134, 11, 0.02); padding: 18px 24px; margin-bottom: 24px;">
+              <div>
+                <h3 style="font-size: 16px;">Member Join Code</h3>
+                <p style="color: var(--text-secondary); font-size: 12.5px; margin-top: 4px;">Share this code with building residents to let them log into their resident panel.</p>
+              </div>
+              <span id="admin-building-code-badge" class="code-display" title="Click to copy code" style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; border: 1px solid var(--border-color); background: var(--bg-primary); padding: 6px 16px; border-radius: 8px; color: var(--primary); cursor: pointer; transition: all 0.2s ease;">AST-XXXX</span>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-title">Total Outstanding Dues</div>
+                <div id="admin-stat-dues" class="stat-value">₹0</div>
+                <div class="stat-subtitle">
+                  <span id="admin-stat-dues-sub" style="color: var(--danger); font-weight: 700;">0 flats</span>
+                  <span>pending charges</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-title">Total Collected (This Month)</div>
+                <div id="admin-stat-collected" class="stat-value">₹0</div>
+                <div class="stat-subtitle">
+                  <span id="admin-stat-collection-rate" style="color: var(--success); font-weight: 700;">0%</span>
+                  <span>payment rate</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-title">Monthly Charge Index</div>
+                <div id="admin-stat-monthly" class="stat-value">₹0</div>
+                <div class="stat-subtitle">
+                  <span>Average charge per flat</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-title">Registered Flats</div>
+                <div id="admin-stat-flats-count" class="stat-value">0</div>
+                <div class="stat-subtitle">
+                  <span>Occupied properties</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dashboard Content row -->
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+              <div class="panel-card" style="margin-bottom: 0;">
+                <div class="panel-card-title">Quick Actions</div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <button id="admin-btn-trigger-bulk-alerts" class="btn btn-primary" style="justify-content: flex-start;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                    Send Monthly Dues Email Alerts
+                  </button>
+                  <button id="admin-btn-quick-add-flat" class="btn btn-secondary" style="justify-content: flex-start;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Add Flat Member
+                  </button>
+                </div>
+              </div>
+
+              <div class="panel-card" style="margin-bottom: 0;">
+                <div class="panel-card-title">Society Account Info</div>
+                <div class="bank-info-box">
+                  <div class="bank-row">
+                    <span class="bank-label">Bank:</span>
+                    <span id="admin-bank-name" class="bank-value">-</span>
+                  </div>
+                  <div class="bank-row">
+                    <span class="bank-label">Account No:</span>
+                    <span id="admin-bank-acc" class="bank-value">-</span>
+                  </div>
+                  <div class="bank-row">
+                    <span class="bank-label">IFSC:</span>
+                    <span id="admin-bank-ifsc" class="bank-value">-</span>
+                  </div>
+                  <div class="bank-row">
+                    <span class="bank-label">UPI ID:</span>
+                    <span id="admin-bank-upi" class="bank-value">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Structured Building Details Card -->
+            <div class="panel-card" style="margin-top: 24px;">
+              <div class="panel-card-title">Property Database Registry Record (Structured Format)</div>
+              <div class="table-container">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr>
+                      <th>Detail Field</th>
+                      <th>Database Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><b>Building Code</b></td>
+                      <td id="struct-building-code" style="font-family: monospace; color: var(--primary); font-weight: 700;">-</td>
+                    </tr>
+                    <tr>
+                      <td><b>Building Name</b></td>
+                      <td id="struct-building-name">-</td>
+                    </tr>
+                    <tr>
+                      <td><b>Admin Name (Head of Building)</b></td>
+                      <td id="struct-admin-name">-</td>
+                    </tr>
+                    <tr>
+                      <td><b>Admin Username</b></td>
+                      <td id="struct-admin-username" style="font-family: monospace;">-</td>
+                    </tr>
+                    <tr>
+                      <td><b>Base Monthly Charge</b></td>
+                      <td id="struct-base-maintenance">-</td>
+                    </tr>
+                    <tr>
+                      <td><b>Registered Flats</b></td>
+                      <td id="struct-flats-count">-</td>
+                    </tr>
+                    <tr>
+                      <td><b>Outstanding Dues (Arrears)</b></td>
+                      <td id="struct-outstanding-dues" style="color: var(--danger); font-weight: 600;">-</td>
+                    </tr>
+                    <tr>
+                      <td><b>Bank Accounts Detail</b></td>
+                      <td id="struct-bank-details" style="font-size: 13px;">-</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ADMIN 3: Flat Directory -->
+          <section id="panel-admin-directory" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2>Flat Directory</h2>
+                <p>Register property owners, edit details, and modify monthly charges.</p>
+              </div>
+              <div class="action-buttons">
+                <button id="admin-btn-add-flat" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  Register Flat Member
+                </button>
+              </div>
+            </header>
+
+            <div class="filter-bar">
+              <div class="search-input-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input id="directory-search" type="text" class="search-input" placeholder="Search by flat, name, or phone..." />
+              </div>
+              <div>
+                <select id="directory-status-filter" class="select-input">
+                  <option value="All">All Payment States</option>
+                  <option value="Paid">Paid Up (0 Dues)</option>
+                  <option value="Unpaid">Pending Dues</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="panel-card" style="padding: 0; overflow: hidden;">
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Flat No</th>
+                      <th>Head of Flat</th>
+                      <th>Monthly Charge</th>
+                      <th>Outstanding Dues</th>
+                      <th>Contact Phone</th>
+                      <th>Status</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="directory-table-body">
+                    <!-- Directory list populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ADMIN 4: Leaderboard -->
+          <section id="panel-admin-leaderboard" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2>Dues Leaderboard</h2>
+                <p>Rankings of flats with outstanding dues (highest outstanding charge first).</p>
+              </div>
+            </header>
+
+            <div class="panel-card" style="margin-bottom: 24px;">
+              <div class="panel-card-title">Broadcast Standing</div>
+              <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14.5px; line-height: 1.5;">
+                Announce the current top dues leaderboard member to all residents. This will trigger a congratulatory message popup on their next login or dashboard load, which is repeated weekly.
+              </p>
+              <button id="admin-broadcast-leaderboard-btn" class="btn btn-primary">
+                Broadcast Leaderboard Congratulations
+              </button>
+            </div>
+
+            <div class="panel-card">
+              <div class="leaderboard-table-header">
+                <span>Rank</span>
+                <span>Flat No</span>
+                <span>Head of Flat</span>
+                <span>Days Overdue</span>
+                <span style="text-align: right;">Outstanding Dues</span>
+              </div>
+              <div id="admin-leaderboard-list" class="leaderboard-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </section>
+
+          <!-- ADMIN 5: Email Reminders Manager -->
+          <section id="panel-admin-reminders" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2>Email Reminder Alerts</h2>
+                <p>Send automated notices outlining current charges and past dues.</p>
+              </div>
+            </header>
+
+            <div class="panel-card">
+              <div class="panel-card-title">Send Reminders</div>
+              <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px; line-height: 1.5;">
+                Dispatch monthly billing alerts. The system automatically computes and inserts the current monthly maintenance charge, outstanding due balance, and overall payment totals dynamically for each member.
+              </p>
+              <button id="admin-reminders-send-bulk" class="btn btn-primary">
+                Send Monthly Email Reminders (All Defaulters)
+              </button>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-card-title">Recently Dispatched Alerts</div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Flat</th>
+                      <th>Head of Flat</th>
+                      <th>Dispatched On</th>
+                      <th>Charge Breakdown</th>
+                      <th style="text-align: right;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-reminders-log-table">
+                    <!-- Dynamic logs -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ADMIN 6: Settings -->
+          <section id="panel-admin-settings" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2>Society Configuration & Accounts</h2>
+                <p>Manage society billing details and banking targets.</p>
+              </div>
+            </header>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+              <div class="panel-card">
+                <div class="panel-card-title">Update Registry Info</div>
+                <form id="form-settings-update">
+                  <div class="form-group">
+                    <label for="settings-building-name">Society / Building Name</label>
+                    <input type="text" id="settings-building-name" class="form-input" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="settings-base-maintenance">Base Monthly Maintenance Charge (₹)</label>
+                    <input type="number" id="settings-base-maintenance" class="form-input" min="0" placeholder="e.g. 4000" required />
+                  </div>
+                  
+                  <h3 style="font-size: 14px; margin: 20px 0 12px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">Admin Credentials</h3>
+                  <div class="form-group">
+                    <label for="settings-admin-name">Admin Name</label>
+                    <input type="text" id="settings-admin-name" class="form-input" required />
+                  </div>
+                  <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                      <label for="settings-admin-username">Admin Username</label>
+                      <input type="text" id="settings-admin-username" class="form-input" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="settings-admin-password">Admin Password</label>
+                      <input type="password" id="settings-admin-password" class="form-input" placeholder="Change password" required />
+                    </div>
+                  </div>
+
+                  <h3 style="font-size: 14px; margin: 20px 0 12px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">Dues Deposit Account</h3>
+                  <div class="form-group">
+                    <label for="settings-bank-name">Bank Name</label>
+                    <input type="text" id="settings-bank-name" class="form-input" required />
+                  </div>
+                  <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                      <label for="settings-account-no">Account Number</label>
+                      <input type="text" id="settings-account-no" class="form-input" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="settings-ifsc">IFSC Code</label>
+                      <input type="text" id="settings-ifsc" class="form-input" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="settings-upi-id">UPI ID</label>
+                    <input type="text" id="settings-upi-id" class="form-input" required />
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Save Registry Changes</button>
+                </form>
+              </div>
+
+              <div class="panel-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div class="panel-card-title">System Actions</div>
+                  <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.5; margin-bottom: 16px;">
+                    Perform simulator data resets, or permanently delete this property database registry from the local system.
+                  </p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <button id="admin-settings-reset" class="btn btn-secondary" style="width: 100%;">
+                    Reset to Default Seed Data
+                  </button>
+                  <button id="admin-settings-delete" class="btn btn-danger" style="width: 100%;">
+                    Delete Property Registry
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================== MEMBER PANELS ==================== -->
+          
+          <!-- MEMBER 1: Member Dashboard -->
+          <section id="panel-member-dashboard" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2 id="member-welcome-title">Welcome, Resident</h2>
+                <p id="member-welcome-subtitle">Flat Details Summary</p>
+              </div>
+            </header>
+
+            <!-- Dynamic Property Visual Illustration Container -->
+            <div id="member-building-status-visual" class="dynamic-building-status-card">
+              <!-- Rendered via JS -->
+            </div>
+
+            <div class="member-dues-container">
+              <!-- Left side: Dues display card -->
+              <div class="dues-focus-card">
+                <div>
+                  <span class="badge" id="member-status-badge">Paid</span>
+                  <h3 style="font-size: 12px; text-transform: uppercase; color: var(--text-secondary); margin-top: 10px; letter-spacing: 0.05em;">Total Outstanding Balance</h3>
+                  <div id="member-outstanding-amount" class="dues-focus-amount">₹0</div>
+                </div>
+                <div style="display: flex; gap: 16px; margin-top: 16px;">
+                  <button id="member-btn-pay-now" class="btn btn-primary" style="flex-grow: 1; padding: 14px;">Pay Maintenance Charges</button>
+                </div>
+              </div>
+
+              <!-- Right side: Destination Bank account details -->
+              <div class="panel-card" style="margin-bottom: 0;">
+                <div class="panel-card-title" style="font-size: 15px;">Deposit Target Accounts</div>
+                <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 10px; line-height: 1.4;">
+                  Transfer dues to the association's bank details below, or pay directly using the online gateway portal.
+                </p>
+                <div class="bank-info-box">
+                  <div class="bank-row">
+                    <span class="bank-label">Bank:</span>
+                    <span id="member-bank-name" class="bank-value">-</span>
+                  </div>
+                  <div class="bank-row">
+                    <span class="bank-label">Account No:</span>
+                    <span id="member-bank-acc" class="bank-value">-</span>
+                  </div>
+                  <div class="bank-row">
+                    <span class="bank-label">IFSC:</span>
+                    <span id="member-bank-ifsc" class="bank-value">-</span>
+                  </div>
+                  <div class="bank-row">
+                    <span class="bank-label">UPI ID:</span>
+                    <span id="member-bank-upi" class="bank-value">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transaction History Card -->
+            <div class="panel-card">
+              <div class="panel-card-title">Payment Transaction Log</div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Transaction Date</th>
+                      <th>Payment Channel</th>
+                      <th style="text-align: right;">Amount Settled</th>
+                    </tr>
+                  </thead>
+                  <tbody id="member-payments-table">
+                    <!-- Dynamic payment list -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- MEMBER 2: Leaderboard -->
+          <section id="panel-member-leaderboard" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2>Building Leaderboard</h2>
+                <p>Rankings of flats with outstanding dues in your building (highest outstanding first).</p>
+              </div>
+            </header>
+
+            <div class="panel-card">
+              <div class="leaderboard-table-header">
+                <span>Rank</span>
+                <span>Flat No</span>
+                <span>Head of Flat</span>
+                <span>Days Overdue</span>
+                <span style="text-align: right;">Outstanding Dues</span>
+              </div>
+              <div id="member-leaderboard-list" class="leaderboard-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </section>
+
+          <!-- MEMBER 3: Inbox -->
+          <section id="panel-member-inbox" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2>Reminders Inbox</h2>
+                <p>Log of monthly maintenance alert email notifications received.</p>
+              </div>
+            </header>
+
+            <div class="panel-card">
+              <div class="panel-card-title">Messages</div>
+              <div id="member-inbox-list" class="inbox-list">
+                <!-- Dynamically populated notifications -->
+              </div>
+            </div>
+          </section>
+
+          <!-- SUPER ADMIN: Platform Manager -->
+          <section id="panel-super-admin-dashboard" class="view-panel">
+            <header class="view-header">
+              <div>
+                <h2>Platform SaaS Console</h2>
+                <p>Manage all registered properties, toggle active status, and extend SaaS subscription periods.</p>
+              </div>
+            </header>
+
+            <div class="panel-card">
+              <div class="panel-card-title">Onboarded Buildings</div>
+              <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14.5px; line-height: 1.5;">
+                Below is a list of all building registries registered on the SaaS network. You can suspend access or extend subscription expiry dates.
+              </p>
+              <div class="table-responsive">
+                <table class="directory-table" style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr>
+                      <th style="text-align: left; padding: 12px;">Code</th>
+                      <th style="text-align: left; padding: 12px;">Building Name</th>
+                      <th style="text-align: left; padding: 12px;">Admin Email</th>
+                      <th style="text-align: left; padding: 12px;">Status</th>
+                      <th style="text-align: left; padding: 12px;">SaaS Expiry</th>
+                      <th style="text-align: right; padding: 12px;">SaaS Management Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="superadmin-buildings-table-body">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+        </main>
+      </div>
+    </div>
+
+    <!-- ==================== MODALS & DIALOGS ==================== -->
+
+    <!-- MODAL: REGISTER/EDIT FLAT MEMBER -->
+    <div id="modal-flat" class="modal-overlay">
+      <div class="modal-content">
+        <button id="modal-flat-close" class="modal-close-btn">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <h3 id="modal-flat-title" style="font-size: 20px; margin-bottom: 20px; font-weight: 700;">Add New Flat Member</h3>
+        <form id="form-flat-details">
+          <input type="hidden" id="flat-original-no" />
+          <div class="form-group">
+            <label for="flat-no">Flat Number</label>
+            <input type="text" id="flat-no" class="form-input" placeholder="e.g. A-101" required />
+          </div>
+          <div class="form-group">
+            <label for="flat-head-name">Head of Flat Name</label>
+            <input type="text" id="flat-head-name" class="form-input" placeholder="e.g. Vikram Malhotra" required />
+          </div>
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="flat-username">Portal Username (Optional)</label>
+              <input type="text" id="flat-username" class="form-input" placeholder="e.g. vikram_m" />
+            </div>
+            <div class="form-group">
+              <label for="flat-password">Portal Password (Optional)</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="flat-password" class="form-input" placeholder="Set password" style="padding-right: 40px;" />
+                <button type="button" id="btn-toggle-flat-password" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; padding: 4px;" title="Show/Hide Password">
+                  <svg id="eye-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events: none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="flat-monthly-charge">Monthly Charge (₹)</label>
+              <input type="number" id="flat-monthly-charge" class="form-input" min="0" placeholder="e.g. 4000" required />
+            </div>
+            <div class="form-group">
+              <label for="flat-outstanding-dues">Outstanding Dues (₹)</label>
+              <input type="number" id="flat-outstanding-dues" class="form-input" min="0" placeholder="e.g. 8000" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="flat-overdue-date">Dues Overdue Since (Oldest Unpaid Bill Date)</label>
+            <input type="date" id="flat-overdue-date" class="form-input" />
+          </div>
+          <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="flat-phone">Contact Phone</label>
+              <input type="tel" id="flat-phone" class="form-input" placeholder="e.g. +91 98100 12345" />
+            </div>
+            <div class="form-group">
+              <label for="flat-email">Contact Email</label>
+              <input type="email" id="flat-email" class="form-input" placeholder="e.g. name@domain.com" />
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button type="button" id="modal-flat-cancel" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Flat Registry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: EMAIL VISUALIZER -->
+    <div id="modal-email-preview" class="modal-overlay">
+      <div class="modal-content" style="max-width: 600px;">
+        <button id="modal-email-close" class="modal-close-btn">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <h3 style="font-size: 18px; margin-bottom: 16px; font-weight: 700;">Email Notification Preview</h3>
+        <div class="email-client-preview">
+          <div class="email-client-header">
+            <div class="email-client-row">From: <span id="email-preview-from">Assetra Automated Reminders &lt;noreply@assetra.in&gt;</span></div>
+            <div class="email-client-row">To: <span id="email-preview-to">resident@domain.com</span></div>
+            <div class="email-client-row">Subject: <span id="email-preview-subject">-</span></div>
+          </div>
+          <div id="email-preview-body" style="white-space: pre-line; color: #334155; font-size: 13.5px;">
+            <!-- Message body -->
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+          <button id="btn-email-preview-ok" class="btn btn-primary">Acknowledge</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: MOCK PAYMENT GATEWAY -->
+    <div id="modal-payment-gateway" class="modal-overlay">
+      <div class="modal-content" style="max-width: 420px;">
+        <button id="modal-pay-close" class="modal-close-btn">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        
+        <!-- Screen 1: Checkout Form -->
+        <div id="pay-gateway-form-screen" class="payment-sheet">
+          <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 2px;">Assetra Secure Checkout</h3>
+          <p style="color: var(--text-secondary); font-size: 12.5px;">Complete payment for outstanding maintenance fees.</p>
+
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 4px;">
+              <span>Payment To:</span>
+              <span id="checkout-building-name" style="font-weight: 600; color: var(--text-primary);">-</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-secondary); align-items: center; margin-bottom: 4px;">
+              <span>Outstanding Balance:</span>
+              <span id="checkout-amount-due" style="font-weight: 600; color: var(--text-primary);">₹0</span>
+            </div>
+            <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
+              <label for="checkout-pay-amount" style="font-size: 11.5px; margin-bottom: 4px; color: var(--text-secondary);">Enter Amount to Pay (₹)</label>
+              <input type="number" id="checkout-pay-amount" class="form-input" min="1" step="1" required style="padding: 8px 12px; font-size: 14px; font-weight: 700; color: var(--primary);" />
+            </div>
+          </div>
+
+          <div class="pay-tabs">
+            <button class="pay-tab-btn active" data-tab="upi">UPI / Scan</button>
+            <button class="pay-tab-btn" data-tab="card">Debit/Credit Card</button>
+          </div>
+
+          <!-- Tab 1: UPI -->
+          <div class="payment-method-panel active" id="pay-panel-upi">
+            <div class="qr-code-wrapper">
+              <div class="qr-code-img">
+                <!-- Inline SVG QR Code simulation -->
+                <svg width="120" height="120" viewBox="0 0 25 25" style="fill: #27272a;">
+                  <rect x="0" y="0" width="7" height="7"/>
+                  <rect x="18" y="0" width="7" height="7"/>
+                  <rect x="0" y="18" width="7" height="7"/>
+                  <rect x="2" y="2" width="3" height="3" style="fill: #fff;"/>
+                  <rect x="20" y="2" width="3" height="3" style="fill: #fff;"/>
+                  <rect x="2" y="20" width="3" height="3" style="fill: #fff;"/>
+                  <rect x="10" y="4" width="2" height="6"/>
+                  <rect x="14" y="2" width="2" height="4"/>
+                  <rect x="8" y="12" width="6" height="2"/>
+                  <rect x="16" y="10" width="4" height="4"/>
+                  <rect x="10" y="16" width="4" height="6"/>
+                  <rect x="18" y="18" width="4" height="2"/>
+                  <rect x="22" y="22" width="3" height="3"/>
+                </svg>
+              </div>
+              <p style="font-size: 12px; text-align: center; color: var(--text-secondary); line-height: 1.4;">
+                Scan QR using BHIM, GooglePay, PhonePe, or Paytm.<br>
+                UPI ID: <span id="checkout-upi-id" style="font-weight: 600; color: var(--text-primary);">-</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Tab 2: Card -->
+          <div class="payment-method-panel" id="pay-panel-card">
+            <form id="form-mock-card-pay" onsubmit="event.preventDefault();">
+              <div class="form-group">
+                <label for="pay-card-number">Card Number</label>
+                <input type="text" id="pay-card-number" class="form-input" placeholder="4111 2222 3333 4444" pattern="[0-9\s]{16,19}" maxlength="19" required />
+              </div>
+              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+                <div class="form-group">
+                  <label for="pay-card-expiry">Expiry Date</label>
+                  <input type="text" id="pay-card-expiry" class="form-input" placeholder="MM/YY" maxlength="5" required />
+                </div>
+                <div class="form-group">
+                  <label for="pay-card-cvv">CVV</label>
+                  <input type="password" id="pay-card-cvv" class="form-input" placeholder="***" maxlength="3" required />
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <button id="btn-process-checkout" class="btn btn-primary" style="width: 100%; padding: 12px;">Authorize Transaction</button>
+        </div>
+
+        <!-- Screen 2: Processing state -->
+        <div id="pay-gateway-loader-screen" class="hidden">
+          <div class="loader-wrapper">
+            <div class="spinner"></div>
+            <h3 style="font-size: 16px; font-weight: 700;">Processing Payment</h3>
+            <p style="color: var(--text-secondary); font-size: 12.5px; text-align: center;">Contacting banking servers to secure credit transfer...</p>
+          </div>
+        </div>
+
+        <!-- Screen 3: Success state -->
+        <div id="pay-gateway-success-screen" class="hidden">
+          <div class="loader-wrapper">
+            <div class="success-checkmark">
+              <div class="check-icon"></div>
+            </div>
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--success); margin-top: 10px;">Payment Successful</h3>
+            <p style="color: var(--text-secondary); font-size: 13.0px; text-align: center;">Your transaction has been processed and your building maintenance account updated.</p>
+            <button id="btn-pay-gateway-finish" class="btn btn-success" style="width: 100%; margin-top: 12px;">Return to Dashboard</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODAL: LEADERBOARD CONGRATULATIONS -->
+    <div id="modal-leaderboard-congrats" class="modal-overlay">
+      <div class="modal-content" style="max-width: 480px; text-align: center; padding: 40px 32px; border: 1.5px solid var(--primary);">
+        <button id="modal-congrats-close" class="modal-close-btn">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        
+        <!-- Trophy Icon -->
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: var(--primary-glow); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; box-shadow: 0 6px 20px var(--primary-glow);">
+          <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+            <path d="M4 22h16"></path>
+            <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10H8a15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </div>
+
+        <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px; color: var(--text-primary);">Leaderboard Standing</h3>
+        
+        <div id="congrats-message-body" style="font-size: 14.5px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;">
+          <!-- Content populated dynamically -->
+        </div>
+
+        <button id="btn-congrats-ok" class="btn btn-primary" style="width: 100%; padding: 12px 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Awesome</button>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
