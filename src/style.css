@@ -443,132 +443,105 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
 }
 
-/* Drawer Overlay backdrop */
+/* Toggle Menu button hidden on desktop */
+.btn-menu-toggle {
+  display: none !important;
+}
+
+/* Drawer overlay hidden on desktop */
 .nav-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(18, 14, 8, 0.45);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 1040;
+  display: none !important;
 }
 
-.top-navbar.menu-open .nav-overlay {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Sliding Right Drawer Navigation */
+/* Nav is a normal header row on desktop */
 .top-navbar nav {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 320px;
-  max-width: 100%;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(184, 134, 11, 0.15);
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
-  z-index: 1050;
-  transform: translateX(100%);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
-  flex-direction: column;
-  padding: 30px 24px;
-  box-sizing: border-box;
+  align-items: center;
+  position: static;
+  width: auto;
+  height: auto;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-left: none;
+  box-shadow: none;
+  transform: none;
+  padding: 0;
+  transition: none;
 }
 
-.top-navbar.menu-open nav {
-  transform: translateX(0);
+/* Hide drawer header on desktop */
+.drawer-header {
+  display: none !important;
 }
 
 .navbar-links {
   list-style: none;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
+  flex-direction: row;
+  gap: 6px;
+  height: 100%;
+  align-items: center;
   margin: 0;
   padding: 0;
 }
 
 .navbar-links li {
-  width: 100%;
+  width: auto;
 }
 
 .navbar-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  border-radius: 10px;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 8px;
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--transition-speed);
   border: 1px solid transparent;
 }
 
 .navbar-item svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
   stroke-width: 2.2;
   fill: none;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: none;
 }
 
 .navbar-item:hover {
-  background: rgba(212, 175, 55, 0.06);
+  background: var(--secondary);
   color: var(--primary);
-  border-color: rgba(212, 175, 55, 0.1);
-  transform: translateX(6px);
+  border-color: transparent;
+  transform: none;
 }
 
 .navbar-item.active {
   background: var(--secondary);
   color: var(--primary);
-  border-color: rgba(212, 175, 55, 0.2);
+  border-color: transparent;
   box-shadow: inset 0 1px 2px rgba(184, 134, 11, 0.05);
 }
 
 .navbar-item.active svg {
-  transform: scale(1.05);
+  transform: none;
 }
 
-/* Toggle Menu button styling (Hamburger) - always visible */
-.btn-menu-toggle {
+/* Hide mobile-only logout items on desktop */
+.mobile-only-logout {
+  display: none !important;
+}
+
+/* Show desktop logout button */
+.navbar-controls {
   display: flex !important;
   align-items: center;
-  justify-content: center;
-  background: var(--secondary);
-  border: 1px solid var(--border-color);
-  color: var(--primary);
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 1060;
-  padding: 0;
-}
-
-.btn-menu-toggle:hover {
-  background: rgba(212, 175, 55, 0.15);
-  border-color: var(--primary);
-  transform: translateY(-1px);
-}
-
-/* Hide old header controls and standard logout button */
-.navbar-controls {
-  display: none !important;
+  gap: 12px;
 }
 
 /* Dynamic Property Visual Component */
@@ -1472,9 +1445,107 @@ tr:hover td {
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
   }
 
-  /* Drawer adjustments on mobile viewports */
+  /* Show hamburger toggle button on mobile */
+  .btn-menu-toggle {
+    display: flex !important;
+  }
+
+  /* Show overlay on mobile */
+  .nav-overlay {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(18, 14, 8, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1040;
+  }
+
+  .top-navbar.menu-open .nav-overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Sliding Right Drawer Navigation on mobile */
   .top-navbar nav {
+    position: fixed;
+    top: 0;
+    right: 0;
     width: 280px; /* slightly narrower drawer on mobile */
+    max-width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(184, 134, 11, 0.15);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+    z-index: 1050;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 24px;
+    box-sizing: border-box;
+  }
+
+  .top-navbar.menu-open nav {
+    transform: translateX(0) !important;
+  }
+
+  /* Show drawer header on mobile drawer */
+  .drawer-header {
+    display: block !important;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .navbar-links li {
+    width: 100%;
+  }
+
+  .navbar-item {
+    gap: 12px;
+    padding: 12px 18px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  .navbar-item svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .navbar-item:hover {
+    background: rgba(212, 175, 55, 0.06);
+    color: var(--primary);
+    border-color: rgba(212, 175, 55, 0.1);
+    transform: translateX(6px);
+  }
+
+  .navbar-item.active {
+    border-color: rgba(212, 175, 55, 0.2);
+  }
+
+  .navbar-item.active svg {
+    transform: scale(1.05);
+  }
+
+  /* Show logout item inside drawer on mobile */
+  .mobile-only-logout {
+    display: block !important;
+  }
+
+  /* Hide desktop header controls/logout button on mobile */
+  .navbar-controls {
+    display: none !important;
   }
 
   /* Add padding-bottom to the main content viewport so it is never covered by the bottom bar */
