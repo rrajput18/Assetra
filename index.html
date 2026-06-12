@@ -168,7 +168,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
             </div>
             <form id="form-register-building-landing">
               <h4 style="font-size: 14px; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Building details</h4>
-              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+              <div class="form-row form-row-2col">
                 <div class="form-group">
                   <label for="setup-building-name">Building / Society Name</label>
                   <input type="text" id="setup-building-name" class="form-input" placeholder="e.g. Skyline Apartments" required />
@@ -184,7 +184,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                 <label for="setup-admin-name">Admin Name</label>
                 <input type="text" id="setup-admin-name" class="form-input" placeholder="e.g. Vikram Malhotra" required />
               </div>
-              <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-row form-row-equal">
                 <div class="form-group">
                   <label for="setup-admin-username">Username / Email</label>
                   <input type="text" id="setup-admin-username" class="form-input" placeholder="e.g. skyline_admin" required />
@@ -200,7 +200,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                 <label for="setup-bank-name">Bank Name</label>
                 <input type="text" id="setup-bank-name" class="form-input" placeholder="e.g. HDFC Bank" required />
               </div>
-              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+              <div class="form-row form-row-2col">
                 <div class="form-group">
                   <label for="setup-account-no">Account Number</label>
                   <input type="text" id="setup-account-no" class="form-input" placeholder="e.g. 5010024987654" required />
@@ -266,7 +266,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
             </div>
             <form id="form-member-flat-register">
               <h4 style="font-size: 14px; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Building & Flat</h4>
-              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+              <div class="form-row form-row-2col">
                 <div class="form-group">
                   <label for="member-reg-building-code">Building Registration Code</label>
                   <input type="text" id="member-reg-building-code" class="form-input" placeholder="e.g. AST-1001" required />
@@ -282,7 +282,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                 <label for="member-reg-head-name">Head of Flat Name</label>
                 <input type="text" id="member-reg-head-name" class="form-input" placeholder="e.g. Rajesh Kumar" required />
               </div>
-              <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-row form-row-equal">
                 <div class="form-group">
                   <label for="member-reg-phone">Contact Phone</label>
                   <input type="text" id="member-reg-phone" class="form-input" placeholder="e.g. +91 98100 11111" />
@@ -294,7 +294,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
               </div>
 
               <h4 style="font-size: 14px; color: var(--primary); margin: 16px 0 10px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Portal Credentials</h4>
-              <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-row form-row-equal">
                 <div class="form-group">
                   <label for="member-reg-username">Portal Username</label>
                   <input type="text" id="member-reg-username" class="form-input" placeholder="e.g. rajesh_k" required />
@@ -470,7 +470,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
             </div>
 
             <!-- Dashboard Content row -->
-            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+            <div class="layout-grid-2col">
               <div class="panel-card" style="margin-bottom: 0;">
                 <div class="panel-card-title">Quick Actions</div>
                 <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -691,7 +691,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
               </div>
             </header>
 
-            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+            <div class="layout-grid-2col">
               <div class="panel-card">
                 <div class="panel-card-title">Update Registry Info</div>
                 <form id="form-settings-update">
@@ -709,7 +709,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                     <label for="settings-admin-name">Admin Name</label>
                     <input type="text" id="settings-admin-name" class="form-input" required />
                   </div>
-                  <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div class="form-row form-row-equal">
                     <div class="form-group">
                       <label for="settings-admin-username">Admin Username</label>
                       <input type="text" id="settings-admin-username" class="form-input" required />
@@ -725,7 +725,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                     <label for="settings-bank-name">Bank Name</label>
                     <input type="text" id="settings-bank-name" class="form-input" required />
                   </div>
-                  <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+                  <div class="form-row form-row-2col">
                     <div class="form-group">
                       <label for="settings-account-no">Account Number</label>
                       <input type="text" id="settings-account-no" class="form-input" required />
@@ -897,7 +897,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
               <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14.5px; line-height: 1.5;">
                 Below is a list of all building registries registered on the SaaS network. You can suspend access or extend subscription expiry dates.
               </p>
-              <div class="table-responsive">
+              <div class="table-container">
                 <table class="directory-table" style="width: 100%; border-collapse: collapse;">
                   <thead>
                     <tr>
@@ -940,7 +940,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
             <label for="flat-head-name">Head of Flat Name</label>
             <input type="text" id="flat-head-name" class="form-input" placeholder="e.g. Vikram Malhotra" required />
           </div>
-          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-row form-row-equal">
             <div class="form-group">
               <label for="flat-username">Portal Username (Optional)</label>
               <input type="text" id="flat-username" class="form-input" placeholder="e.g. vikram_m" />
@@ -955,7 +955,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
               </div>
             </div>
           </div>
-          <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-row form-row-equal">
             <div class="form-group">
               <label for="flat-monthly-charge">Monthly Charge (₹)</label>
               <input type="number" id="flat-monthly-charge" class="form-input" min="0" placeholder="e.g. 4000" required />
@@ -969,7 +969,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
             <label for="flat-overdue-date">Dues Overdue Since (Oldest Unpaid Bill Date)</label>
             <input type="date" id="flat-overdue-date" class="form-input" />
           </div>
-          <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+          <div class="form-row form-row-2col">
             <div class="form-group">
               <label for="flat-phone">Contact Phone</label>
               <input type="tel" id="flat-phone" class="form-input" placeholder="e.g. +91 98100 12345" />
@@ -1077,7 +1077,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                 <label for="pay-card-number">Card Number</label>
                 <input type="text" id="pay-card-number" class="form-input" placeholder="4111 2222 3333 4444" pattern="[0-9\s]{16,19}" maxlength="19" required />
               </div>
-              <div class="form-row" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+              <div class="form-row form-row-2col">
                 <div class="form-group">
                   <label for="pay-card-expiry">Expiry Date</label>
                   <input type="text" id="pay-card-expiry" class="form-input" placeholder="MM/YY" maxlength="5" required />
