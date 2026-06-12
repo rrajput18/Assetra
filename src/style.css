@@ -443,84 +443,132 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
 }
 
+/* Drawer Overlay backdrop */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 14, 8, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1040;
+}
+
+.top-navbar.menu-open .nav-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sliding Right Drawer Navigation */
+.top-navbar nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  max-width: 100%;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(184, 134, 11, 0.15);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+  z-index: 1050;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 24px;
+  box-sizing: border-box;
+}
+
+.top-navbar.menu-open nav {
+  transform: translateX(0);
+}
+
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 6px;
-  height: 100%;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  width: 100%;
 }
 
 .navbar-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 8px;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 10px;
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 14.5px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-speed);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
 }
 
 .navbar-item svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
   stroke-width: 2.2;
   fill: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar-item:hover {
-  background: var(--secondary);
+  background: rgba(212, 175, 55, 0.06);
   color: var(--primary);
+  border-color: rgba(212, 175, 55, 0.1);
+  transform: translateX(6px);
 }
 
 .navbar-item.active {
   background: var(--secondary);
   color: var(--primary);
+  border-color: rgba(212, 175, 55, 0.2);
   box-shadow: inset 0 1px 2px rgba(184, 134, 11, 0.05);
 }
 
-.navbar-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.navbar-item.active svg {
+  transform: scale(1.05);
 }
 
-.navbar-theme-toggle {
-  background: var(--secondary);
-  border: 1px solid var(--border-color);
-  color: var(--primary);
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  display: flex;
+/* Toggle Menu button styling (Hamburger) - always visible */
+.btn-menu-toggle {
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all var(--transition-speed);
-}
-
-.navbar-theme-toggle:hover {
-  background: var(--secondary-hover);
-}
-
-.navbar-logout-btn {
-  background: none;
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13.5px;
-}
-
-.navbar-logout-btn:hover {
   background: var(--secondary);
+  border: 1px solid var(--border-color);
   color: var(--primary);
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1060;
+  padding: 0;
+}
+
+.btn-menu-toggle:hover {
+  background: rgba(212, 175, 55, 0.15);
   border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+/* Hide old header controls and standard logout button */
+.navbar-controls {
+  display: none !important;
 }
 
 /* Dynamic Property Visual Component */
@@ -1424,92 +1472,9 @@ tr:hover td {
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
   }
 
-  /* Hide navigation links in top-navbar and render them at the bottom as a floating tab bar */
+  /* Drawer adjustments on mobile viewports */
   .top-navbar nav {
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 32px);
-    max-width: 500px;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1.5px solid rgba(212, 175, 55, 0.25);
-    border-radius: 20px;
-    padding: 6px 12px;
-    box-shadow: 0 12px 35px rgba(184, 134, 11, 0.12), 0 2px 8px rgba(0, 0, 0, 0.05);
-    z-index: 1000;
-  }
-  
-  .navbar-links {
-    width: 100%;
-    display: flex !important;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0;
-    overflow-x: visible;
-    padding: 0;
-    height: auto;
-  }
-
-  .navbar-links li {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  .navbar-item {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 6px 4px;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--text-secondary);
-    border-radius: 12px;
-    min-width: 60px;
-    text-align: center;
-    background: transparent;
-    transition: all 0.25s ease;
-  }
-
-  .navbar-item svg {
-    width: 20px;
-    height: 20px;
-    margin-right: 0;
-    stroke-width: 2.2;
-    transition: transform 0.2s ease;
-  }
-
-  .navbar-item:hover {
-    background: transparent;
-    transform: none;
-  }
-
-  .navbar-item.active {
-    color: var(--primary);
-    background: rgba(212, 175, 55, 0.08);
-  }
-  
-  .navbar-item.active svg {
-    transform: scale(1.1);
-    color: var(--primary);
-  }
-
-  /* Move logout button to top navbar header */
-  .navbar-controls {
-    width: auto;
-    display: flex;
-    align-items: center;
-  }
-
-  .navbar-logout-btn {
-    padding: 8px 16px;
-    font-size: 13px;
+    width: 280px; /* slightly narrower drawer on mobile */
   }
 
   /* Add padding-bottom to the main content viewport so it is never covered by the bottom bar */

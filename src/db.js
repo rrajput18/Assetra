@@ -618,9 +618,8 @@ export async function getGlobalLeaderboard(buildingCodeFilter = 'All') {
   }
 }
 
-// Authenticate administrator profile credentials
 export async function findBuildingByAdminCredentials(username, password) {
-  if (username.trim() === 'superadmin@assetra.com' && password.trim() === 'superadmin123') {
+  if (username.trim() === 'rakshitrajput006@gmail.com' && password.trim() === 'Rax&@102110)') {
     return {
       code: 'SUPER_ADMIN',
       name: 'Platform SaaS Console',
@@ -629,9 +628,9 @@ export async function findBuildingByAdminCredentials(username, password) {
       isActive: true,
       subscriptionExpiresAt: null,
       adminDetails: {
-        name: 'Super Admin',
-        username: 'superadmin@assetra.com',
-        password: 'superadmin123'
+        name: 'Platform Manager',
+        username: 'rakshitrajput006@gmail.com',
+        password: 'Rax&@102110)'
       }
     };
   }

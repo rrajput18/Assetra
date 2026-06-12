@@ -495,8 +495,8 @@ function setupPortalRouting() {
     }
   };
 
-  // Logout button
-  document.getElementById('btn-logout').onclick = () => {
+  // Handle Logout
+  const handleLogout = () => {
     session = { role: null, buildingCode: null, flatNo: null };
     
     workspaceSection.classList.add('hidden');
@@ -506,15 +506,67 @@ function setupPortalRouting() {
     loginMemberCard.classList.add('hidden');
     registerAdminCard.classList.add('hidden');
     
+    // Reset mobile menu state if open
+    const topNavbar = document.querySelector('.top-navbar');
+    if (topNavbar) topNavbar.classList.remove('menu-open');
+    const menuToggle = document.getElementById('btn-mobile-menu-toggle');
+    if (menuToggle) {
+      menuToggle.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" style="pointer-events: none;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+    }
+
     showToast('Logged Out Successfully', 'info');
   };
+
+  document.getElementById('btn-logout').onclick = handleLogout;
+  document.querySelectorAll('.logout-link-item').forEach(el => {
+    el.onclick = (e) => {
+      e.preventDefault();
+      handleLogout();
+    };
+  });
+
+  // Mobile hamburger menu toggle
+  const menuToggle = document.getElementById('btn-mobile-menu-toggle');
+  const topNavbar = document.querySelector('.top-navbar');
+  const navElement = document.querySelector('.top-navbar nav');
+  
+  if (menuToggle && topNavbar && navElement) {
+    menuToggle.onclick = (e) => {
+      e.stopPropagation();
+      const isOpen = topNavbar.classList.toggle('menu-open');
+      if (isOpen) {
+        menuToggle.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" style="pointer-events: none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+      } else {
+        menuToggle.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" style="pointer-events: none;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+      }
+    };
+
+    // Close menu when clicking anywhere else
+    document.addEventListener('click', (e) => {
+      if (!navElement.contains(e.target) && !menuToggle.contains(e.target)) {
+        topNavbar.classList.remove('menu-open');
+        menuToggle.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" style="pointer-events: none;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+      }
+    });
+  }
 
   // Set Top Navbar switches
   document.querySelectorAll('.top-navbar nav a').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
+      // Skip logout link from switching panel
+      if (link.classList.contains('logout-link-item')) return;
+
       const panelId = link.getAttribute('data-panel');
       switchPanel(panelId);
+
+      // Close mobile menu
+      if (topNavbar) {
+        topNavbar.classList.remove('menu-open');
+        if (menuToggle) {
+          menuToggle.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" style="pointer-events: none;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+        }
+      }
     });
   });
 }
