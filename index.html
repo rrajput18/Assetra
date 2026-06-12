@@ -554,6 +554,32 @@ VITE_SUPABASE_ANON_KEY=your_anon_key</pre>
                     </tr>
                   </tbody>
                 </table>
+            </div>
+
+            <!-- Maintenance Payment Logs Card -->
+            <div class="panel-card" style="margin-top: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div class="panel-card-title" style="margin-bottom: 0;">Incoming Payment Entries</div>
+                <button id="admin-btn-download-payments-csv" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                  Download CSV
+                </button>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Flat No</th>
+                      <th>Resident Name</th>
+                      <th>Payment Date</th>
+                      <th>Amount Paid</th>
+                      <th>Payment Method</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-payments-log-table-body">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
               </div>
             </div>
           </section>

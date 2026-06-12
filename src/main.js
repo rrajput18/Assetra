@@ -703,6 +703,53 @@ function renderBuildingDynamicStatus(building, targetContainerId) {
   `;
 }
 
+function downloadPaymentsCSV(building) {
+  const allPayments = [];
+  Object.keys(building.flats).forEach(flatNo => {
+    if (flatNo === 'SYSTEM_BROADCAST') return;
+    const flat = building.flats[flatNo];
+    flat.payments.forEach(p => {
+      allPayments.push({
+        flatNo: flat.flatNo,
+        headName: flat.headName,
+        date: p.date,
+        amount: p.amount,
+        method: p.method
+      });
+    });
+  });
+
+  if (allPayments.length === 0) {
+    showToast('No payment records to download.', 'error');
+    return;
+  }
+
+  // Sort by date descending
+  allPayments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Build CSV content
+  const headers = ['Flat Number', 'Resident Name', 'Payment Date', 'Amount Paid (INR)', 'Payment Method'];
+  const rows = allPayments.map(p => [
+    p.flatNo,
+    `"${p.headName.replace(/"/g, '""')}"`,
+    p.date,
+    p.amount,
+    `"${p.method.replace(/"/g, '""')}"`
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `${building.name.replace(/[^a-z0-9]/gi, '_')}_payments_${new Date().toISOString().split('T')[0]}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('Payments CSV downloaded successfully!', 'success');
+}
+
 // ==================== VIEW: ADMIN DASHBOARD ====================
 function renderAdminDashboard(building) {
   document.getElementById('admin-dashboard-building-name').textContent = building.name;
@@ -762,6 +809,57 @@ function renderAdminDashboard(building) {
 
   // Render the Dynamic Graphic Illustration
   renderBuildingDynamicStatus(building, 'admin-building-status-visual');
+
+  // Populate Maintenance Payment Logs table
+  const paymentsTableBody = document.getElementById('admin-payments-log-table-body');
+  if (paymentsTableBody) {
+    paymentsTableBody.innerHTML = '';
+    const allPayments = [];
+    Object.keys(building.flats).forEach(flatNo => {
+      if (flatNo === 'SYSTEM_BROADCAST') return;
+      const flat = building.flats[flatNo];
+      flat.payments.forEach(p => {
+        allPayments.push({
+          flatNo: flat.flatNo,
+          headName: flat.headName,
+          date: p.date,
+          amount: p.amount,
+          method: p.method
+        });
+      });
+    });
+
+    // Sort by date descending
+    allPayments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (allPayments.length === 0) {
+      paymentsTableBody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; color: var(--text-secondary); padding: 20px;">
+            No incoming payment entries found.
+          </td>
+        </tr>
+      `;
+    } else {
+      allPayments.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><b>${p.flatNo}</b></td>
+          <td>${p.headName}</td>
+          <td>${p.date}</td>
+          <td style="color: var(--success); font-weight: 600;">₹${p.amount.toLocaleString()}</td>
+          <td><span class="badge" style="background: rgba(212, 175, 55, 0.08); color: var(--primary); border: 1px solid var(--border-color);">${p.method}</span></td>
+        `;
+        paymentsTableBody.appendChild(tr);
+      });
+    }
+  }
+
+  // Wire up the download CSV button
+  const downloadBtn = document.getElementById('admin-btn-download-payments-csv');
+  if (downloadBtn) {
+    downloadBtn.onclick = () => downloadPaymentsCSV(building);
+  }
 
   // Trigger bulk warnings
   const btnBulkAlerts = document.getElementById('admin-btn-trigger-bulk-alerts');
