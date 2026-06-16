@@ -286,12 +286,14 @@ function setupPortalRouting() {
       password: document.getElementById('setup-admin-password').value
     };
 
+    const qrBase64 = await readFileInputAsBase64(document.getElementById('setup-payment-qr'));
     const bankDetails = {
       bankName: document.getElementById('setup-bank-name').value,
       accountNo: document.getElementById('setup-account-no').value,
       ifsc: document.getElementById('setup-ifsc').value,
       upiId: document.getElementById('setup-upi-id').value,
-      razorpayKeyId: document.getElementById('setup-razorpay-key').value.trim()
+      razorpayKeyId: document.getElementById('setup-razorpay-key').value.trim(),
+      paymentQr: qrBase64
     };
 
     try {
@@ -1289,6 +1291,20 @@ function populateAdminSettingsForm(building) {
   document.getElementById('settings-admin-username').value = building.adminDetails ? building.adminDetails.username : '';
   document.getElementById('settings-admin-password').value = building.adminDetails ? building.adminDetails.password : '';
 
+  // QR Preview
+  const previewContainer = document.getElementById('settings-qr-preview-container');
+  const previewImg = document.getElementById('settings-qr-preview');
+  if (building.bankDetails.paymentQr) {
+    previewImg.src = building.bankDetails.paymentQr;
+    previewContainer.style.display = 'block';
+  } else {
+    previewContainer.style.display = 'none';
+  }
+
+  // Clear file input
+  const fileInput = document.getElementById('settings-payment-qr');
+  if (fileInput) fileInput.value = '';
+
   const form = document.getElementById('form-settings-update');
   form.onsubmit = async (e) => {
     e.preventDefault();
@@ -1300,12 +1316,19 @@ function populateAdminSettingsForm(building) {
       const adminUsername = document.getElementById('settings-admin-username').value.trim();
       const adminPassword = document.getElementById('settings-admin-password').value;
 
+      let qrBase64 = building.bankDetails.paymentQr || null;
+      const fileInputEl = document.getElementById('settings-payment-qr');
+      if (fileInputEl && fileInputEl.files && fileInputEl.files[0]) {
+        qrBase64 = await readFileInputAsBase64(fileInputEl);
+      }
+
       const bank = {
         bankName: document.getElementById('settings-bank-name').value,
         accountNo: document.getElementById('settings-account-no').value,
         ifsc: document.getElementById('settings-ifsc').value,
         upiId: document.getElementById('settings-upi-id').value,
-        razorpayKeyId: document.getElementById('settings-razorpay-key').value.trim()
+        razorpayKeyId: document.getElementById('settings-razorpay-key').value.trim(),
+        paymentQr: qrBase64
       };
 
       // Check if administrative username is taken by another building
@@ -1538,6 +1561,25 @@ function renderMemberDashboard(building) {
   document.getElementById('member-bank-ifsc').textContent = building.bankDetails.ifsc || '-';
   document.getElementById('member-bank-upi').textContent = building.bankDetails.upiId || '-';
 
+  // Render QR Code
+  const qrContainer = document.getElementById('member-payment-qr-container');
+  const qrImg = document.getElementById('member-payment-qr-img');
+  const qrHelp = document.getElementById('member-payment-qr-help');
+
+  if (building.bankDetails.paymentQr) {
+    qrImg.src = building.bankDetails.paymentQr;
+    qrHelp.textContent = 'Scan this custom QR Code using any UPI application (GPay, PhonePe, Paytm, BHIM) to pay your maintenance dues directly.';
+    qrContainer.style.display = 'block';
+  } else if (building.bankDetails.upiId) {
+    // Dynamically generate a UPI QR Code
+    const payURI = `upi://pay?pa=${building.bankDetails.upiId}&pn=${encodeURIComponent(building.name)}&am=${flat.outstandingDues}&cu=INR`;
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(payURI)}`;
+    qrHelp.textContent = `Scan this auto-generated QR Code to pre-fill ₹${flat.outstandingDues.toLocaleString()} to ${building.name} on your UPI app.`;
+    qrContainer.style.display = 'block';
+  } else {
+    qrContainer.style.display = 'none';
+  }
+
   const paymentsTable = document.getElementById('member-payments-table');
   paymentsTable.innerHTML = '';
   
@@ -1747,6 +1789,19 @@ function openCheckoutGateway(building, flat) {
     modal.classList.remove('active');
     renderPanelContent('member-dashboard');
   };
+}
+
+function readFileInputAsBase64(fileInput) {
+  return new Promise((resolve) => {
+    if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+      resolve(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(fileInput.files[0]);
+  });
 }
 
 // ==================== ALERTS: TOAST SYSTEM ====================

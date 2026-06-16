@@ -138,7 +138,8 @@ export async function getBuildingWithNestedData(code) {
         accountNo: b.account_no || '',
         ifsc: b.ifsc || '',
         upiId: b.upi_id || '',
-        razorpayKeyId: b.razorpay_key_id || ''
+        razorpayKeyId: b.razorpay_key_id || '',
+        paymentQr: b.payment_qr || ''
       },
       flats: {}
     };
@@ -245,7 +246,8 @@ export async function registerBuilding(name, bankDetails, baseMaintenance, admin
       account_no: bankDetails.accountNo || '',
       ifsc: bankDetails.ifsc || '',
       upi_id: bankDetails.upiId || '',
-      razorpay_key_id: bankDetails.razorpayKeyId || ''
+      razorpay_key_id: bankDetails.razorpayKeyId || '',
+      payment_qr: bankDetails.paymentQr || null
     }]);
 
     if (error) throw error;
@@ -272,7 +274,8 @@ export async function updateBuilding(buildingCode, updatedName, baseMaintenance,
       account_no: bankDetails.accountNo,
       ifsc: bankDetails.ifsc,
       upi_id: bankDetails.upiId,
-      razorpay_key_id: bankDetails.razorpayKeyId
+      razorpay_key_id: bankDetails.razorpayKeyId,
+      payment_qr: bankDetails.paymentQr
     }).eq('code', buildingCode);
 
     return !error;

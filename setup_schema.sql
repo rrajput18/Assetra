@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS public.buildings (
     ifsc TEXT,
     upi_id TEXT,
     razorpay_key_id TEXT,
+    payment_qr TEXT,
     is_active BOOLEAN DEFAULT TRUE,
     subscription_expires_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + INTERVAL '1 year')
 );
@@ -62,6 +63,7 @@ CREATE TABLE IF NOT EXISTS public.payments (
 );
 
 -- Enable RLS on all tables
+ALTER TABLE public.buildings ADD COLUMN IF NOT EXISTS payment_qr TEXT;
 ALTER TABLE public.buildings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.flats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reminders ENABLE ROW LEVEL SECURITY;
