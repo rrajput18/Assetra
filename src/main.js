@@ -330,7 +330,8 @@ function setupPortalRouting() {
       };
 
       const rzpKey = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
-      const isRealGatewayConfigured = rzpKey && rzpKey !== 'YOUR_RAZORPAY_KEY_ID_HERE';
+      // Temporarily disabled (holding up actual Razorpay until user is verified)
+      const isRealGatewayConfigured = false;
 
       if (isRealGatewayConfigured) {
         const options = {
@@ -1667,7 +1668,8 @@ function openCheckoutGateway(building, flat) {
 
     const buildingKey = building.bankDetails.razorpayKeyId || '';
     const rzpKey = buildingKey || import.meta.env.VITE_RAZORPAY_KEY_ID || '';
-    const isRealGatewayConfigured = rzpKey && rzpKey !== 'YOUR_RAZORPAY_KEY_ID_HERE';
+    // Temporarily disabled (holding up actual Razorpay until user is verified)
+    const isRealGatewayConfigured = false;
 
     if (isRealGatewayConfigured) {
       // Close modal to let Razorpay draw its own clean overlay
