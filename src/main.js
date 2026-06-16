@@ -479,14 +479,20 @@ function setupPortalRouting() {
       }
 
       if (success) {
-        session.role = 'member';
-        session.buildingCode = buildingCode;
-        session.flatNo = flatNo;
-        
-        showToast(`Flat registration successful! Welcome ${headName}`, 'success');
-        document.getElementById('form-member-flat-register').reset();
-        document.getElementById('register-member-flat').classList.add('hidden');
-        enterWorkspace();
+        // Authenticate the resident via Supabase Auth to bind the session
+        const flat = await getFlatByUsernameAndPassword(username, password);
+        if (flat) {
+          session.role = 'member';
+          session.buildingCode = buildingCode;
+          session.flatNo = flatNo;
+          
+          showToast(`Flat registration successful! Welcome ${headName}`, 'success');
+          document.getElementById('form-member-flat-register').reset();
+          document.getElementById('register-member-flat').classList.add('hidden');
+          enterWorkspace();
+        } else {
+          showToast('Failed to initialize session. Please try logging in manually.', 'error');
+        }
       } else {
         showToast('Failed to register flat. Please try again.', 'error');
       }

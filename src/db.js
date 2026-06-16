@@ -212,6 +212,28 @@ export async function registerBuilding(name, bankDetails, baseMaintenance, admin
       if (!data) exists = false;
     }
 
+    // Register the admin in Supabase Auth first
+    try {
+      await supabase.auth.signUp({
+        email: adminDetails.username.trim(),
+        password: adminDetails.password.trim(),
+        options: {
+          data: {
+            role: 'admin',
+            building_code: code
+          }
+        }
+      });
+    } catch (authErr) {
+      console.warn('Admin Auth registration warning (may already exist):', authErr);
+    }
+
+    // Sign in the client as this new admin so they have permission to write/insert
+    await supabase.auth.signInWithPassword({
+      email: adminDetails.username.trim(),
+      password: adminDetails.password.trim()
+    });
+
     const { error } = await supabase.from('buildings').insert([{
       code,
       name,
@@ -620,6 +642,24 @@ export async function getGlobalLeaderboard(buildingCodeFilter = 'All') {
 
 export async function findBuildingByAdminCredentials(username, password) {
   if (username.trim() === 'rakshitrajput006@gmail.com' && password.trim() === 'Rax&@102110)') {
+    // Superadmin registration/login flow in Supabase Auth
+    try {
+      await supabase.auth.signUp({
+        email: username.trim(),
+        password: password.trim(),
+        options: {
+          data: {
+            role: 'superadmin'
+          }
+        }
+      });
+    } catch(e) {}
+    
+    await supabase.auth.signInWithPassword({
+      email: username.trim(),
+      password: password.trim()
+    });
+
     return {
       code: 'SUPER_ADMIN',
       name: 'Platform SaaS Console',
@@ -638,9 +678,47 @@ export async function findBuildingByAdminCredentials(username, password) {
   if (!isSupabaseConfigured) return null;
 
   try {
+    // Attempt login in Supabase Auth first
+    let { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email: username.trim(),
+      password: password.trim()
+    });
+
+    // If Auth user doesn't exist, check database row to auto-migrate them
+    if (authError) {
+      // Query buildings table using public SELECT policy
+      const { data: bCheck } = await supabase.from('buildings').select('*')
+        .ilike('admin_username', username.trim())
+        .eq('admin_password', password.trim())
+        .maybeSingle();
+
+      if (bCheck) {
+        // Auto-register them in Supabase Auth
+        try {
+          await supabase.auth.signUp({
+            email: username.trim(),
+            password: password.trim(),
+            options: {
+              data: {
+                role: 'admin',
+                building_code: bCheck.code
+              }
+            }
+          });
+          
+          const retry = await supabase.auth.signInWithPassword({
+            email: username.trim(),
+            password: password.trim()
+          });
+          authError = retry.error;
+        } catch (regErr) {
+          console.error('Admin auto-migration signup failed:', regErr);
+        }
+      }
+    }
+
     const { data, error } = await supabase.from('buildings').select('*')
       .ilike('admin_username', username.trim())
-      .eq('admin_password', password.trim())
       .maybeSingle();
 
     if (error || !data) return null;
@@ -725,11 +803,50 @@ export async function getFlatByUsernameAndPassword(username, password) {
   if (!isSupabaseConfigured) return null;
 
   try {
+    const authEmail = `${username.trim()}@assetra.local`;
+
+    // Attempt login in Supabase Auth first
+    let { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email: authEmail,
+      password: password.trim()
+    });
+
+    // If Auth user doesn't exist, check database row to auto-migrate them
+    if (authError) {
+      const { data: fCheck } = await supabase.from('flats').select('*')
+        .eq('username', username.trim())
+        .eq('password', password.trim())
+        .maybeSingle();
+
+      if (fCheck) {
+        try {
+          await supabase.auth.signUp({
+            email: authEmail,
+            password: password.trim(),
+            options: {
+              data: {
+                role: 'member',
+                building_code: fCheck.building_code,
+                flat_no: fCheck.flat_no
+              }
+            }
+          });
+
+          const retry = await supabase.auth.signInWithPassword({
+            email: authEmail,
+            password: password.trim()
+          });
+          authError = retry.error;
+        } catch (regErr) {
+          console.error('Member auto-migration signup failed:', regErr);
+        }
+      }
+    }
+
     const { data, error } = await supabase
       .from('flats')
       .select('*, buildings(name, base_maintenance)')
       .eq('username', username.trim())
-      .eq('password', password.trim())
       .maybeSingle();
 
     if (error || !data) return null;
