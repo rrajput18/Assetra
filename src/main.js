@@ -266,7 +266,7 @@ function setupPortalRouting() {
         document.getElementById('form-admin-login').reset();
         enterWorkspace();
       } else {
-        showToast('Invalid administrator credentials. Try mrathod@gmail.com / manoj', 'error');
+        showToast('Invalid administrator credentials. Try mrathod@gmail.com / manoj123', 'error');
       }
     } catch (error) {
       console.error('Admin login error:', error);

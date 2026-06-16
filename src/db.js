@@ -47,7 +47,7 @@ export async function initDB() {
         base_maintenance: 4000,
         admin_name: 'Manoj Rathod',
         admin_username: 'mrathod@gmail.com',
-        admin_password: 'manoj',
+        admin_password: 'manoj123',
         bank_name: DEFAULT_BANK_DETAILS.bankName,
         account_no: DEFAULT_BANK_DETAILS.accountNo,
         ifsc: DEFAULT_BANK_DETAILS.ifsc,
