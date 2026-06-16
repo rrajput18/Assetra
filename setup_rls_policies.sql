@@ -108,7 +108,7 @@ CREATE POLICY "member_select_flat" ON flats
     FOR SELECT 
     TO public, authenticated 
     USING (
-        (auth.jwt() -> 'app_metadata' ->> 'role' = 'member' AND building_code = (auth.jwt() -> 'app_metadata' ->> 'building_code') AND flat_no = (auth.jwt() -> 'app_metadata' ->> 'flat_no'))
+        (auth.jwt() -> 'app_metadata' ->> 'role' = 'member' AND building_code = (auth.jwt() -> 'app_metadata' ->> 'building_code'))
         OR (auth.jwt() -> 'app_metadata' ->> 'role' = 'admin' AND building_code = (auth.jwt() -> 'app_metadata' ->> 'building_code'))
         OR (auth.jwt() -> 'app_metadata' ->> 'role' = 'superadmin')
         OR (auth.role() = 'anon') -- Allow public queries for code + flat number checks during login/setup
@@ -141,7 +141,9 @@ CREATE POLICY "member_select_reminders" ON reminders
     FOR SELECT 
     TO authenticated 
     USING (
-        (auth.jwt() -> 'app_metadata' ->> 'role' = 'member' AND building_code = (auth.jwt() -> 'app_metadata' ->> 'building_code') AND flat_no = (auth.jwt() -> 'app_metadata' ->> 'flat_no'))
+        (auth.jwt() -> 'app_metadata' ->> 'role' = 'member' 
+         AND building_code = (auth.jwt() -> 'app_metadata' ->> 'building_code') 
+         AND (flat_no = (auth.jwt() -> 'app_metadata' ->> 'flat_no') OR flat_no = 'SYSTEM_BROADCAST'))
     );
 
 
