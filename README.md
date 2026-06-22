@@ -94,20 +94,7 @@ To ensure the leaderboard and congratulations broadcasts function securely under
 5. Disabling confirmation email verification is required to support instant mock credentials (e.g. resident accounts):
    * Go to **Authentication** -> **Providers** -> **Email** -> toggle **"Confirm email"** to **OFF** -> click **Save**.
 
----
 
-## 🔑 Access Credentials Directory
-
-Use these credentials to test the portals:
-
-| User Role | Username / Email | Password | Details |
-| :--- | :--- | :--- | :--- |
-| **Super-Admin** | `rakshitrajput006@gmail.com` | `Rax&@102110)` | Accesses the master SaaS Console to suspend/activate properties. |
-| **Property Admin** | `mrathod@gmail.com` | `manoj123` | Accesses the dashboard and directory tools for **Assetra Heights** (`AST-1001`). |
-| **Resident 1** | `vikram` | `password` | Settle dues for **Vikram Malhotra** (Flat `A-101`). |
-| **Resident 2** | `ananya` | `password` | Settle dues for **Ananya Deshmukh** (Flat `B-304`). |
-
----
 
 ## 🧪 Verification Procedures
 
@@ -122,14 +109,15 @@ Open `http://localhost:3000` in your browser. Upon the very first page load, the
 
 ### 3. Verify Admin Login & Auto-Migration
 1. On the landing page, choose **Property Administrator**.
-2. Log in using `mrathod@gmail.com` / `manoj123`.
+2. Log in using your admin portal credentials (or the default seed account).
 3. The database auto-migration script will securely sign up this account inside **Supabase Auth** on the fly.
-4. Go to **Authentication** -> **Users** in your Supabase dashboard to verify that Manoj's auth profile was successfully created.
+4. Go to **Authentication** -> **Users** in your Supabase dashboard to verify that the auth profile was successfully created.
 
 ### 4. Verify Leaderboard Congrats Broadcast
-1. Log in as Admin (`mrathod@gmail.com` / `manoj123`).
+1. Log in as Admin.
 2. Go to the **Leaderboard** tab, and click the **"Broadcast Leaderboard Congratulations"** button.
 3. Log out, then select **Building Member**.
-4. Log in as a resident (e.g., Username: `vikram`, Password: `password`).
+4. Log in as a resident using resident credentials (or a default seed resident account).
 5. Verify that the **Leaderboard Standing congratulations modal** overlays the dashboard, indicating the current leader's details. Click **Awesome** to dismiss.
 6. Verify that the resident can view their neighbors' ranks and outstanding balances on the **Building Leaderboard** tab.
+
