@@ -1,52 +1,135 @@
-# Assetra
+# ⚜️ Assetra: Premium Multi-Tenant Property Maintenance SaaS
 
-Assetra is a premium, multi-tenant SaaS application designed to simplify building maintenance tracking, invoicing, and dues collections. It features a luxury champagne-gold aesthetic, building-level directories, outstanding dues leaderboards, custom partial payment checkouts (integrating Razorpay), and automated email reminders.
+Assetra is a high-end, multi-tenant Software-as-a-Service (SaaS) platform designed for property managers and residents. It simplifies building maintenance tracking, invoicing, payment collections, and arrears management. Styled with a premium **light-gold champagne visual theme**, it features interactive animated line-drawing preloaders, dynamic SVG property-tier illustrations, building-level directories, outstanding dues leaderboards, custom payment checkouts (routing to individual merchant accounts), and scan-to-pay QR codes.
 
-## Key Features
+---
 
-- **Multi-Tenant Architecture**: Multiple properties can register, configure unique settings (maintenance fees, bank details, credentials), and manage their registry independently using unique building codes.
-- **SaaS Platform Console**: A master Platform Super-Admin dashboard (`superadmin@assetra.com`) allows managing all properties, suspending/activating building access, and extending service subscription periods.
-- **Member & Admin Portals**: Dedicated authentication flows for property managers (to edit directory details and send alerts) and flat residents (to check leaderboard standings and pay outstanding balances).
-- **Payment Gateway**: Integrates Razorpay Standard Checkout allowing residents to pay full or custom partial dues with automatic database balance updates.
-- **Automated Notices**: Generates and logs billing reminders for tenants with pending arrears.
-- **Interactive Preloader & Theme**: A custom vector line-drawing animation at startup set in a premium light-gold visual theme.
+## 🚀 Key Features & Capabilities
 
-## Tech Stack & Architecture
+### 1. Multi-Tenant Architecture & Data Isolation
+* **Independent Registries**: Multiple property managers can register their buildings independently. Each building gets a unique join code (e.g., `AST-1001`) that acts as a secure tenant identifier.
+* **Database Isolation (RLS)**: Row-Level Security policies in Supabase isolate all database tables (`buildings`, `flats`, `reminders`, `payments`). Tenant data is partitioned by `building_code`.
 
-Assetra is built on a modern, high-performance serverless stack designed for multi-tenant scalability and low-latency database queries:
+### 2. SaaS Super-Admin Console
+* **Global Console Dashboard**: Accessing the platform with master super-admin credentials opens a centralized SaaS Console.
+* **Tenant Controls**: The platform owner can monitor all registered properties, suspend or activate building access, and extend service subscriptions by months or years.
 
-- **Frontend Builder (Vite & ES6+)**: Compiles optimized, modular vanilla JavaScript. Utilizes asynchronous parallel processing (`Promise.all`) to load registry datasets concurrently, minimizing round-trip network delays.
-- **Database Backend (Supabase PostgreSQL)**: Provides real-time transactional data persistence. Implements relational schemas for properties, flats, invoices, and payments, secured using row-level policies.
-- **Payment Gateway (Razorpay Standard Checkout SDK)**: Handles secure payment collections. Directs tenant maintenance balances straight to the respective building merchant's deposit account via multi-tenant API key routing.
-- **Styling (Vanilla CSS3)**: Employs custom CSS custom variables, keyframe preloader animations, glassmorphic layout decks, and flexible grid rows that collapse responsively for mobile viewports.
+### 3. Property Manager Portal (Admin)
+* **Property Hub Selector**: Multi-property admins can switch between their managed buildings, while single-property admins route directly to their specific dashboard.
+* **Resident Directory**: Register flats, pre-provision accounts, view overdue status, and search/filter residents instantly.
+* **Billing Reminders**: Generate custom notices for overdue balances and dispatch bulk payment notifications.
+* **Transaction Logs & Export**: Monitor payment history, view settled dues, and export ledger logs to a clean, formatted CSV file.
+* **Leaderboard Broadcasts**: Publicly announce the top outstanding dues leader (social accountability tool) to trigger a congratulations popup notice inside the resident dashboard.
 
-## Getting Started
+### 4. Resident Dues Portal (Member)
+* **Authentication**: Seamless resident login using their building code, flat number, and portal credentials.
+* **Dues Ledger**: View total outstanding balances and a complete log of payments settled.
+* **Scan to Pay (UPI QR Code)**: 
+  * If the administrator uploads a custom payment QR code, it will display.
+  * If empty, the dashboard **dynamically generates a UPI QR Code** encoding their outstanding dues and payee name. Scanning it with GPay, PhonePe, Paytm, or BHIM automatically pre-fills the exact due amount and building name.
+* **Razorpay Checkout**: Pay full or custom partial dues directly using the integrated Razorpay SDK.
 
-### 1. Installation
-Install project dependencies:
+---
+
+## 🎨 Visual System & Design Philosophy
+
+Assetra implements modern visual design practices:
+* **Luxury Champagne Palette**: Warm cream backdrops, brushed gold accents, metallic outline icons, and gold-tinted card deck layouts.
+* **Headless Building Preloader**: A vector line-drawing animation at startup. Left and right skyscrapers draw, adjust scale, and pop windows open in a fluid 2.5s sequence.
+* **Dynamic Property Visuals**: Dashboards render SVG illustrations indicating the property's financial health:
+  * **Gold Tier (Rate >= 90%)**: A thriving gold skyscraper with a *"Thriving Gold Tier"* badge.
+  * **Silver Tier (70% - 90%)**: Slate-and-gold stable apartment blocks with a *"Stable Silver Tier"* badge.
+  * **Amber Tier (< 70%)**: Warning skyscraper alert line-art with an *"Attention Required"* badge.
+
+---
+
+## 📂 Project Directory Structure
+
+```filepath
+Assetra/
+├── public/                     # Static assets served directly
+│   ├── favicon.svg             # Champagne-gold favicon matching logo
+│   └── icons.svg               # SVG icons sheet for navigation and tabs
+├── src/
+│   ├── assets/                 # Image assets
+│   │   ├── hero.png            # Dashboard presentation hero
+│   │   ├── javascript.svg      # JS compiler logo
+│   │   └── vite.svg            # Bundler engine logo
+│   ├── counter.js              # State helpers
+│   ├── db.js                   # Supabase interaction client, data maps, and migration triggers
+│   ├── main.js                 # Front-end UI router, controllers, and form handlers
+│   └── style.css               # Theme custom tokens, responsive drawer layouts, and keyframe animations
+├── index.html                  # Main UI layout, modal elements, and loading preloaders
+├── setup_schema.sql            # Unified DDL: Creates tables, enables RLS, triggers, and security policies
+├── setup_rls_policies.sql      # RLS specific script: Focuses purely on security policy updates
+├── setup_saas.sql              # Alter commands: Column additions for SaaS properties
+├── package.json                # Project dependencies (Vite & Supabase JS client)
+├── vercel.json                 # Vercel single-page application router settings
+└── vite.config.js              # Vite bundler parameters (routes local server to port 3000)
+```
+
+---
+
+## 🛠️ Installation & Configuration
+
+### 1. Install Dependencies
+Clone the repository, open the directory in your terminal, and run:
 ```bash
 npm install
 ```
 
-### 2. Database Schema Setup
-Execute the statements inside `setup_saas.sql` in your Supabase project's SQL Editor to configure the necessary tables (`buildings`, `flats`, `reminders`, `payments`) and Row-Level Security (RLS) policies.
-
-### 3. Environment Configuration
-Create a `.env` file in the root directory and add your keys:
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory:
 ```env
 VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-public-key
-VITE_RAZORPAY_KEY_ID=rzp_test_your_key_id
 ```
 
-### 4. Running Locally
-Start the development server:
+### 3. Initialize Supabase Database Schema & Security Trigger
+To ensure the leaderboard and congratulations broadcasts function securely under RLS, follow these steps:
+1. Log in to your **Supabase Dashboard**.
+2. Navigate to **SQL Editor** -> **New Query**.
+3. Copy the contents of [setup_schema.sql](file:///c:/Users/raksh/OneDrive/Desktop/Folder/Assetra/setup_schema.sql).
+4. Paste it into the editor and click **Run**.
+5. Disabling confirmation email verification is required to support instant mock credentials (e.g. resident accounts):
+   * Go to **Authentication** -> **Providers** -> **Email** -> toggle **"Confirm email"** to **OFF** -> click **Save**.
+
+---
+
+## 🔑 Access Credentials Directory
+
+Use these credentials to test the portals:
+
+| User Role | Username / Email | Password | Details |
+| :--- | :--- | :--- | :--- |
+| **Super-Admin** | `rakshitrajput006@gmail.com` | `Rax&@102110)` | Accesses the master SaaS Console to suspend/activate properties. |
+| **Property Admin** | `mrathod@gmail.com` | `manoj123` | Accesses the dashboard and directory tools for **Assetra Heights** (`AST-1001`). |
+| **Resident 1** | `vikram` | `password` | Settle dues for **Vikram Malhotra** (Flat `A-101`). |
+| **Resident 2** | `ananya` | `password` | Settle dues for **Ananya Deshmukh** (Flat `B-304`). |
+
+---
+
+## 🧪 Verification Procedures
+
+### 1. Run Development Server
+Start the local server (Vite is configured to serve on `http://localhost:3000`):
 ```bash
 npm run dev
 ```
 
-### 5. Production Build
-Generate optimized static assets in the `dist` folder:
-```bash
-npm run build
-```
+### 2. Verify Database Seeding
+Open `http://localhost:3000` in your browser. Upon the very first page load, the database initialization code will run. If the database tables are empty, it will automatically populate them with the default **Assetra Heights** (`AST-1001`) registry data.
+
+### 3. Verify Admin Login & Auto-Migration
+1. On the landing page, choose **Property Administrator**.
+2. Log in using `mrathod@gmail.com` / `manoj123`.
+3. The database auto-migration script will securely sign up this account inside **Supabase Auth** on the fly.
+4. Go to **Authentication** -> **Users** in your Supabase dashboard to verify that Manoj's auth profile was successfully created.
+
+### 4. Verify Leaderboard Congrats Broadcast
+1. Log in as Admin (`mrathod@gmail.com` / `manoj123`).
+2. Go to the **Leaderboard** tab, and click the **"Broadcast Leaderboard Congratulations"** button.
+3. Log out, then select **Building Member**.
+4. Log in as a resident (e.g., Username: `vikram`, Password: `password`).
+5. Verify that the **Leaderboard Standing congratulations modal** overlays the dashboard, indicating the current leader's details. Click **Awesome** to dismiss.
+6. Verify that the resident can view their neighbors' ranks and outstanding balances on the **Building Leaderboard** tab.
